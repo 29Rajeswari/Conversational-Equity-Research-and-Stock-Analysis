@@ -1,71 +1,46 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  CartesianGrid,
 } from 'recharts';
 
-const FinancialCharts = ({ financial }) => {
+const formatNumber = (value) => {
+  if (value >= 1_000_000_000) return `${(value / 1e9).toFixed(1)}B`;
+  if (value >= 1_000_000) return `${(value / 1e6).toFixed(1)}M`;
+  return value;
+};
 
-  // 🔥 REAL DATA TRANSFORMATION (NO MOCK)
-  const chartData = useMemo(() => {
-    const reports =
-      financial?.financials?.income_statement?.annualReports;
-
-    if (!Array.isArray(reports)) return [];
-
-    return reports
-      .slice(0, 5)
-      .reverse()
-      .map((r) => ({
-        year: r.fiscalDateEnding.slice(0, 4),
-        revenue: Number(r.totalRevenue),
-        profit: Number(r.grossProfit)
-      }));
-  }, [financial]);
-
-  if (chartData.length === 0) {
+const FinancialCharts = ({ chartData }) => {
+  if (!chartData || chartData.length === 0) {
     return (
-      <p className="text-textMuted text-sm mt-4">
+      <p className="text-textMuted text-sm">
         No financial data available
       </p>
     );
   }
 
   return (
-    <div className="mt-4">
-      <h4 className="text-sm font-semibold mb-2">
+    <div className="h-72 w-full">
+      <h3 className="text-sm font-semibold mb-2">
         Revenue & Profit (Last 5 Years)
-      </h4>
+      </h3>
 
-      <ResponsiveContainer width="100%" height={260}>
-        <LineChart data={chartData}>
-          <XAxis dataKey="year" stroke="#9CA3AF" />
-          <YAxis stroke="#9CA3AF" />
-          <Tooltip />
-          <Legend />
-
-          <Line
-            type="monotone"
-            dataKey="revenue"
-            stroke="#3DD9D0"
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            name="Revenue"
-          />
-
-          <Line
-            type="monotone"
-            dataKey="profit"
-            stroke="#22c55e"
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            name="Profit"
-          />
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={chartData}
+          margin={{ top: 10, right: 20, left: 40, bottom: 10 }} // ✅ KEY FIX
+        >
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <XAxis dataKey="year" />
+          <YAxis tickFormatter={formatNumber} />
+          <Tooltip formatter={formatNumber} />
+          <Line dataKey="revenue" stroke="#38E8D8" strokeWidth={2} />
+          <Line dataKey="profit" stroke="#4ADE80" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </div>

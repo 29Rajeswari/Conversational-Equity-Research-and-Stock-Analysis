@@ -1,78 +1,72 @@
-// frontend/src/components/AnalysisPanel.jsx
-import React, { useState } from "react";
-import InsightTabs from "./InsightTabs";
-import FinancialCharts from "./FinancialCharts";
+import React, { useState } from 'react';
+import FinancialCharts from './FinancialCharts';
+
+const buildChartData = (financial) => {
+  const reports =
+    financial?.financials?.income_statement?.annualReports;
+
+  if (!Array.isArray(reports)) return [];
+
+  return reports
+    .slice(0, 5)
+    .reverse()
+    .map((r) => ({
+      year: r.fiscalDateEnding?.slice(0, 4),
+      revenue: Number(r.totalRevenue),
+      profit: Number(r.operatingIncome || r.grossProfit),
+    }));
+};
 
 const AnalysisPanel = ({ data }) => {
-  const [activeTab, setActiveTab] = useState("thesis");
-  const [showRaw, setShowRaw] = useState(false);
+  const [tab, setTab] = useState('thesis');
 
   if (!data) {
     return (
       <div className="p-4 bg-surface rounded-lg">
-        <h2 className="text-lg font-semibold mb-2">Analysis</h2>
-        <p className="text-textMuted">
-          No analysis available. Search a stock to view insights.
+        <p className="text-textMuted text-sm">
+          Search a stock to view analysis
         </p>
       </div>
     );
   }
 
-  const { query, symbol, chat, financial, research, news } = data;
+  const chartData = buildChartData(data.financial);
 
   return (
-    <div className="p-4 bg-surface rounded-lg space-y-4">
-      {/* Header */}
-      <div>
-        <h2 className="text-lg font-semibold">Analysis</h2>
-        <p className="text-xs text-textMuted">
-          Query: <b>{query}</b> | Symbol: <b>{symbol}</b>
+    <div className="p-4 bg-surface rounded-lg">
+      <h2 className="text-lg font-semibold mb-2">Analysis</h2>
+
+      {/* TABS */}
+      <div className="flex gap-2 mb-4">
+        {['thesis', 'data', 'risk'].map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`px-3 py-1 rounded text-sm ${
+              tab === t ? 'bg-primary text-black' : 'bg-muted'
+            }`}
+          >
+            {t === 'thesis' && '💡 Thesis'}
+            {t === 'data' && '📊 Data'}
+            {t === 'risk' && '⚠️ Risk'}
+          </button>
+        ))}
+      </div>
+
+      {/* CONTENT */}
+      {tab === 'thesis' && (
+        <p className="text-sm whitespace-pre-line">
+          {data.chat?.answer || 'No thesis available'}
         </p>
-      </div>
-
-      {/* Tabs */}
-      <InsightTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {/* TAB CONTENT */}
-      {activeTab === "thesis" && (
-        <div className="text-sm whitespace-pre-line">
-          {chat?.answer || "Thesis not available"}
-        </div>
       )}
 
-      {activeTab === "data" && (
-        <div>
-          <h3 className="text-sm font-semibold mb-2">
-            Revenue & Profit (Last 5 Years)
-          </h3>
-          {activeTab === 'data' && (
-            <FinancialCharts financial={data?.financial} />
-            )}
-          /
-        </div>
+      {tab === 'data' && <FinancialCharts chartData={chartData} />}
+
+      {tab === 'risk' && (
+        <p className="text-sm text-textMuted">
+          {data.research?.risk || 'Risk analysis not available'}
+        </p>
       )}
-
-      {activeTab === "risk" && (
-        <div className="text-sm whitespace-pre-line">
-          {research?.risk || "Risk analysis not available"}
-        </div>
-      )}
-
-      {/* RAW JSON TOGGLE (IMPORTANT) */}
-      <div className="pt-3 border-t border-textMuted/20">
-        <button
-          onClick={() => setShowRaw(!showRaw)}
-          className="text-xs text-primary underline"
-        >
-          {showRaw ? "Hide Raw API Response" : "Show Raw API Response"}
-        </button>
-
-        {showRaw && (
-          <pre className="mt-2 text-xs max-h-64 overflow-auto bg-background p-2 rounded">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        )}
-      </div>
     </div>
   );
 };
