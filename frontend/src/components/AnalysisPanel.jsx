@@ -1,3 +1,4 @@
+// src/components/AnalysisPanel.jsx
 import React, { useState } from 'react';
 import FinancialCharts from './FinancialCharts';
 
@@ -33,17 +34,22 @@ const AnalysisPanel = ({ data }) => {
   const chartData = buildChartData(data.financial);
 
   return (
-    <div className="p-4 bg-surface rounded-lg">
-      <h2 className="text-lg font-semibold mb-2">Analysis</h2>
+    <div className="p-6 bg-surface rounded-lg">
+      <h2 className="text-lg font-semibold mb-3">Analysis</h2>
+      <p className="text-xs text-textMuted mb-4">
+        Query: {data.query} | Symbol: {data.symbol}
+      </p>
 
-      {/* TABS */}
+      {/* Tabs */}
       <div className="flex gap-2 mb-4">
         {['thesis', 'data', 'risk'].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`px-3 py-1 rounded text-sm ${
-              tab === t ? 'bg-primary text-black' : 'bg-muted'
+              tab === t
+                ? 'bg-primary text-black'
+                : 'bg-background text-textMuted'
             }`}
           >
             {t === 'thesis' && '💡 Thesis'}
@@ -53,20 +59,47 @@ const AnalysisPanel = ({ data }) => {
         ))}
       </div>
 
-      {/* CONTENT */}
-      {tab === 'thesis' && (
-        <p className="text-sm whitespace-pre-line">
-          {data.chat?.answer || 'No thesis available'}
-        </p>
-      )}
+      {/* SIDE-BY-SIDE LAYOUT */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-      {tab === 'data' && <FinancialCharts chartData={chartData} />}
+        {/* LEFT → RAW API RESPONSE */}
+       <div className="bg-background rounded p-3 text-xs overflow-y-auto overflow-x-hidden max-h-[420px] border border-textMuted/10">
 
-      {tab === 'risk' && (
-        <p className="text-sm text-textMuted">
-          {data.research?.risk || 'Risk analysis not available'}
-        </p>
-      )}
+
+          <div className="text-textMuted mb-2">Raw API Response</div>
+          <pre className="whitespace-pre-wrap">
+            {JSON.stringify(data, null, 2)}
+          </pre>
+        </div>
+
+        {/* RIGHT → TAB CONTENT */}
+        <div className="text-sm">
+
+          {tab === 'thesis' && (
+            <div className="whitespace-pre-line leading-relaxed">
+              {data.chat?.answer || 'No thesis available'}
+            </div>
+          )}
+
+          {tab === 'data' && (
+            <>
+              {chartData.length > 0 ? (
+                <FinancialCharts chartData={chartData} />
+              ) : (
+                <p className="text-textMuted">
+                  No financial data available
+                </p>
+              )}
+            </>
+          )}
+
+          {tab === 'risk' && (
+            <p className="text-textMuted leading-relaxed">
+              {data.research?.risk || 'Risk analysis not available'}
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

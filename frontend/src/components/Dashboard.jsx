@@ -15,19 +15,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Market Overview */}
-        <div className="lg:col-span-2 p-6 bg-surface rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Market Overview</h2>
-
-          {query ? (
-            <p className="text-textMuted">
-              Showing market overview for <b>{query}</b>
-            </p>
-          ) : (
-            <p className="text-textMuted">
-              Select a stock to view details.
-            </p>
-          )}
-        </div>
+        
 
         {/* Analysis */}
         <AnalysisPanel query={query} />

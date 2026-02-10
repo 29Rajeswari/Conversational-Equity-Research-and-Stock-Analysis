@@ -1,15 +1,14 @@
-// DashboardPage.jsx
+// src/pages/DashboardPage.jsx
 import React, { useState } from 'react';
 import SearchBar from '../components/SearchBar';
-import Dashboard from '../components/Dashboard';
 import AnalysisPanel from '../components/AnalysisPanel';
+import Dashboard from '../components/Dashboard';
+import FinancialCharts from '../components/FinancialCharts';
 import useSearch from '../hooks/useSearch';
 
-
 const DashboardPage = () => {
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [analysisData, setAnalysisData] = useState(null);
   const { data, loading, error, runSearch } = useSearch();
+  const [analysisData, setAnalysisData] = useState(null);
 
   const handleSearch = async (query) => {
     try {
@@ -20,26 +19,35 @@ const DashboardPage = () => {
     }
   };
 
+  const finalData = analysisData || data;
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Research Dashboard</h1>
-          <p className="text-textMuted">Analyze stocks with AI-powered insights</p>
+          <p className="text-textMuted">
+            Analyze stocks with AI-powered insights
+          </p>
         </div>
 
+        {/* ✅ SINGLE SEARCH BAR */}
         <SearchBar onSearch={handleSearch} />
-        
+
+        {/* Main Layout */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Dashboard selectedStock={selectedStock} />
+
+          {/* LEFT SIDE */}
+          
           </div>
-          <div>
-            <AnalysisPanel data={analysisData || data} />
-          </div>
+
+          {/* RIGHT SIDE */}
+          <AnalysisPanel data={finalData} />
         </div>
       </div>
-    </div>
+    
   );
 };
 

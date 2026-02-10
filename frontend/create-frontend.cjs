@@ -261,13 +261,7 @@ const DashboardPage = () => {
           <h1 className="text-3xl font-bold mb-2">Research Dashboard</h1>
           <p className="text-textMuted">Analyze stocks with AI-powered insights</p>
         </div>
-
-        <SearchBar onSearch={handleSearch} />
-        
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Dashboard selectedStock={selectedStock} />
-          </div>
           <div>
             <AnalysisPanel data={analysisData} />
           </div>
