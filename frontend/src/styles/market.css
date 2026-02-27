@@ -1,0 +1,563 @@
+/**
+ * src/styles/market.css  ← NEW stylesheet
+ * Drop alongside existing index.css — do not modify it.
+ *
+ * Import in your existing  src/styles/index.css  by adding one line at the bottom:
+ *   @import './market.css';
+ *
+ * Uses the same CSS variable names as your existing theme.js / index.css.
+ */
+
+/* ─── Variables (mirrors existing theme colours) ─────────────────────────── */
+:root {
+  --clr-primary:      #3DD9D0;
+  --clr-primary-dim:  rgba(61, 217, 208, 0.15);
+  --clr-bg:           #0F1419;
+  --clr-surface:      #1A1F2E;
+  --clr-surface-2:    #1E2532;
+  --clr-border:       rgba(255, 255, 255, 0.07);
+  --clr-text:         #E8EAED;
+  --clr-muted:        #9CA3AF;
+  --clr-up:           #3DD9D0;
+  --clr-down:         #FF5C5C;
+  --clr-sell:         #FF6B47;
+  --radius-card:      14px;
+  --radius-sm:        8px;
+}
+
+/* ─── Live Badge ─────────────────────────────────────────────────────────── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 100px;
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-muted);
+  text-transform: uppercase;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.live-badge--on {
+  background: rgba(61, 217, 208, 0.1);
+  border-color: rgba(61, 217, 208, 0.35);
+  color: var(--clr-primary);
+}
+
+.live-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.live-badge--on .live-badge__dot {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ─── Connection Status ──────────────────────────────────────────────────── */
+.conn-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--clr-muted);
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--clr-surface-2);
+}
+
+.conn-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.conn-status__dot--pulse {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* ─── Market Selector ────────────────────────────────────────────────────── */
+.market-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.market-selector__toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--clr-surface);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.market-selector__btn {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  color: var(--clr-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.market-selector__btn--active {
+  background: var(--clr-primary);
+  color: var(--clr-bg);
+}
+
+.market-selector__exchange {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text);
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  outline: none;
+}
+
+/* ─── Live Price Chart ───────────────────────────────────────────────────── */
+.live-chart {
+  background: var(--clr-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--clr-border);
+  padding: 20px;
+}
+
+.live-chart__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.live-chart__price-block {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.live-chart__symbol {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+.live-chart__price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--clr-text);
+  letter-spacing: -0.5px;
+}
+
+.live-chart__change {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.live-chart__change--up   { color: var(--clr-up); }
+.live-chart__change--down { color: var(--clr-down); }
+
+.live-chart__intervals {
+  display: flex;
+  gap: 4px;
+}
+
+.live-chart__interval-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--clr-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.live-chart__interval-btn:hover {
+  color: var(--clr-text);
+  background: var(--clr-surface-2);
+}
+
+.live-chart__interval-btn--active {
+  background: var(--clr-surface-2);
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
+.live-chart__skeleton {
+  width: 100%;
+  height: 320px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--clr-surface-2) 25%, var(--clr-surface) 50%, var(--clr-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--clr-muted);
+  font-size: 14px;
+}
+
+/* Chart tooltip */
+.chart-tooltip {
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--clr-text);
+  line-height: 1.7;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.chart-tooltip__time {
+  color: var(--clr-muted);
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.chart-tooltip__vol {
+  color: var(--clr-muted);
+  margin-top: 4px;
+}
+
+/* ─── Performance Bar ────────────────────────────────────────────────────── */
+.perf-bar {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.perf-bar__header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.range-slider {
+  margin-bottom: 22px;
+}
+
+.range-slider__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.range-slider__labels span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.range-slider__labels em {
+  font-size: 11px;
+  color: var(--clr-muted);
+  font-style: normal;
+}
+
+.range-slider__labels strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.range-slider__track {
+  position: relative;
+  height: 4px;
+  background: var(--clr-surface-2);
+  border-radius: 4px;
+}
+
+.range-slider__fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--clr-primary);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.range-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px; height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid var(--clr-primary);
+  transition: left 0.4s ease;
+  box-shadow: 0 0 6px rgba(61, 217, 208, 0.5);
+}
+
+.perf-bar__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.perf-bar__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.perf-bar__stat-label {
+  font-size: 11px;
+  color: var(--clr-muted);
+}
+
+.perf-bar__stat-value {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.perf-bar__stat--dim .perf-bar__stat-value {
+  color: var(--clr-muted);
+}
+
+/* ─── Fundamentals Grid ──────────────────────────────────────────────────── */
+.fundamentals {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.fundamentals__header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.fundamentals__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+
+.fundamentals__cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.fundamentals__cell:nth-child(odd)  { padding-right: 24px; }
+.fundamentals__cell:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--clr-border); }
+
+.fundamentals__label {
+  font-size: 13px;
+  color: var(--clr-muted);
+}
+
+.fundamentals__value {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ─── Market Depth Panel ─────────────────────────────────────────────────── */
+.depth-panel {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.depth-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.depth-panel__title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.depth-panel__spinner {
+  width: 14px; height: 14px;
+  border: 2px solid var(--clr-border);
+  border-top-color: var(--clr-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.depth-panel__ratio {
+  margin-bottom: 16px;
+}
+
+.depth-panel__ratio-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--clr-muted);
+  margin-bottom: 6px;
+}
+
+.depth-panel__bar {
+  display: flex;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.depth-panel__bar-fill--buy  { background: var(--clr-up);   border-radius: 3px; transition: width 0.3s; }
+.depth-panel__bar-fill--sell { background: var(--clr-sell); border-radius: 3px; transition: width 0.3s; }
+
+.depth-table__head,
+.depth-table__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.depth-table__head {
+  color: var(--clr-muted);
+  font-size: 11px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--clr-border);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.depth-table__row + .depth-table__row {
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+.depth-table__bid-price,
+.depth-table__ask-price { color: var(--clr-text); }
+
+.depth-table__bid-qty   { color: var(--clr-up);   font-weight: 600; text-align: right; }
+.depth-table__ask-qty   { color: var(--clr-sell);  font-weight: 600; text-align: right; }
+
+.depth-panel--error p,
+.depth-panel__empty {
+  color: var(--clr-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ─── Stock Detail Page ──────────────────────────────────────────────────── */
+.stock-detail {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.stock-detail__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stock-detail__breadcrumb {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.stock-detail__symbol {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.stock-detail__exchange {
+  font-size: 13px;
+  color: var(--clr-muted);
+}
+
+.stock-detail__chart {
+  margin-bottom: 20px;
+}
+
+.stock-detail__body {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+}
+
+.stock-detail--error {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--clr-down);
+}
+
+/* ─── Skeleton shimmer ───────────────────────────────────────────────────── */
+.skeleton-block {
+  background: linear-gradient(90deg, var(--clr-surface) 25%, var(--clr-surface-2) 50%, var(--clr-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .stock-detail__body {
+    grid-template-columns: 1fr;
+  }
+  .fundamentals__grid {
+    grid-template-columns: 1fr;
+  }
+  .fundamentals__cell:nth-child(even) {
+    padding-left: 0;
+    border-left: none;
+  }
+  .perf-bar__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .live-chart__header {
+    flex-direction: column;
+  }
+  .live-chart__price {
+    font-size: 22px;
+  }
+  .perf-bar__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

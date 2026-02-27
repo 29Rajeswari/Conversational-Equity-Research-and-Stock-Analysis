@@ -1,0 +1,5 @@
+black
+isort
+ruff
+flake8
+pre-commit
